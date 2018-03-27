@@ -1,0 +1,471 @@
+
+<!-- saved from url=(0082)http://www-users.cselabs.umn.edu/classes/Fall-2017/csci5106/resources/hws/hw7.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+
+<title>CSCI 5106, Programming Languages</title>
+
+</head><body><center>
+<img align="bottom" src="./CSCI 5106, Programming Languages_files/syssesqui.jpg" alt="[UMN logo]">
+</center>
+
+<h1><center>
+CSCI 5106: Programming Languages<br>
+Fall 2017, University of Minnesota<br>
+Homework 7
+</center>
+</h1>
+
+<hr>
+<p>
+
+<b>Posted:</b>Nov 15, 2017 <br>
+<b>Due:</b> Before class on Dec 4, 2017<br>
+<b>Note:</b> A new assignment, the final one, will be posted on Nov 29,
+2017<br>
+
+</p><p></p><hr><p>
+</p><h2>General Instructions</h2>
+<ul>
+<li>All the programming parts of this assignment are
+  to be done in Standard ML. There are also certain parts in this
+  question that ask for the types of expressions. You may want to
+  check your answers to these parts using the type inference
+  capabilities of ML.  
+<p>
+
+</p></li><li>Submissions should have two parts:
+<ul>
+<li>A <b>hard copy</b> form that answers each problem below separately
+    and comprehensively, including the SML code you have written as
+    relevant. 
+<p>
+</p></li><li>An <b>electronic form</b> turned in via Moodle containing the code
+    you have written for each problem. The code for each problem
+    should be in separate files called probn.sml when n is replaced by
+    the problem number. The entire submission should be turned in as a
+    tarred and gzipped file that when extracted will yield the
+    individual files for each problem.
+</li></ul>
+<p>
+</p></li><li>A comment on the way SML/NJ displays terms that you might find
+  useful. To keep things readable at the top-level, it does not show
+  the details of a deeply nested term beyond a certain
+  depth. Similarly, for a list, it does not show more than one or two 
+elements. You can change the default settings by using something like
+the following at the interaction level:
+<blockquote>
+<pre>Control.Print.printDepth := 100;
+Control.Print.printLength := 100;
+</pre>
+</blockquote>
+The first of these assignments sets the nesting depth to be displayed
+to 100 (a really large number) and the second sets the number of
+elements in a list that are to be displayed similarly to 100. 
+</li></ul>
+
+<p></p><hr><p>
+
+</p><h2>Problem 1 (8 points, 2 points each part)</h2> 
+
+In Problem 3 of Assignment 5, you considered
+the task of defining a `generic' binary search tree type in
+C. In this problem you are to define such a type in ML. In
+particular, you are to define the following:
+<ol>
+<li>A type, through a datatype declaration, that is capable
+  of representing a binary search tree of any kind of element but <i>all</i>
+  of whose elements are of the same type.
+<p>
+</p></li><li>A function <i>member</i> to check if a given object is present in
+  a binary search tree of a suitable type. This function should take
+  an ordering relation and an equality relation as arguments and
+  should be capable of checking at compile-time that these relations
+  are of the `right' type. 
+<p>
+</p></li><li>A function <i>insert</i> to insert an element into a binary
+  search tree of a suitable type. Once again, this function should
+  take an ordering relation and a comparison relation as parameters
+  and should be capable of checking the types of these relations at
+  compile-time.  
+<p>
+</p></li><li>A function <i>printtree</i> that takes a binary tree and a
+  function that is capable of printing elements of the tree and
+  displays the contents of the tree using an in-order traversal. As
+  with <i>member</i> and <i>insert</i>, the definition should be such
+  that the type of the element printing function argument should be
+  checkable at compile time at any place where <i>printtree</i> is
+  used. 
+</li></ol>
+Test your type and functions using strings and integers
+as the two element types. Note that ML provides provides &lt; and <i>=</i>
+as builtin operators over strings. However, you
+will have to re-define operators so that they can be passed as
+functions to be used in <i>member</i> and <i>insert</i>. For testing
+the <i>printtree</i> function, you may need to know a little about
+input/output in Standard ML. You can find discussion of this through
+the SML Library pages. For example the information at
+<blockquote>
+<pre><a href="http://www.standardml.org/Basis/text-io.html">http://www.standardml.org/Basis/text-io.html</a>
+</pre>
+</blockquote>
+may be relevant. Specifically <tt>print</tt> is a function that takes
+a string and displays it to the standard output stream (typically the
+screen). Also the <tt>Int</tt> structure has a function
+called <tt>toString</tt> that converts integers to strings, e.g.
+<blockquote>
+<pre>- Int.toString(153);
+val it = "153" : string
+- 
+</pre>
+</blockquote>
+<p></p><hr><p>
+
+</p><h2>Problem 2 (4 points)</h2> 
+
+Present the types that ML associates with
+the functions <i>insert</i> and <i>member</i> that you defined in
+Problem 1 and explain how they help in ensuring at compile-time that
+type errors do not arise at run-time. 
+Contrast this situation with the one that arose in
+conjunction with C in Problem 3 of Assignment 5 and that you might
+have discussed in Problem 4 of that assignment. 
+
+<p></p><hr><p>
+
+<a name="p3">
+</a></p><h2><a name="p3">Problem 3 (10 points, 2 points each part)</a></h2><a name="p3"> 
+
+In <i>propositional logic</i>, logical expressions
+are built starting from <i>propositional variables</i> by using
+logical operators. For the purposes of this problem, we will assume
+that these operators are <i>and</i>, <i>or</i> and <i>not</i>. Thus,
+if <i>p</i> and <i>q</i> are propositional variables, then
+<i>and(or(p,q),not(p))</i> is a logical expression. Expressions of
+this kind are given a <i>truth value</i> based on an assignment of
+truth values to the propositional variables that appear in them and
+our usual understanding of the logical operators. Thus,
+if <i>p</i> is assigned the value <i>F</i> and <i>q</i> is
+assigned the value <i>T</i>, then the expression
+<i>and(or(p,q),not(p))</i> is deemed to be true, i.e. has the
+value <i>T</i>. 
+<ol>
+<li>Provide a datatype declaration in ML that can be used to represent
+logical expressions as described above. You may assume that
+propositional variables are represented by strings.  
+<p>
+</p></li><li>Explain how you might represent an assignment of truth values for
+a collection of propositional variables.
+<p>
+</p></li><li>Define a function <i>eval</i> that takes a logical expression
+<i>E</i> and an assignment <i>L</i> of truth values for propositional
+variables, both represented in the ways you have just described, and
+that returns the truth value of <i>E</i> under the assignment
+<i>L</i>.
+<p>
+</p></li><li>Define a function called <i>varsInExp</i> that takes a logical expression
+  and returns a list of all the propositional variables appearing in
+  that list. Make sure that the list that is returned has exactly one
+  entry for each variable; this function will be needed in the next
+  part and it will be easier to use there if it has this property.
+<p>
+</p></li><li>A <i>tautology</i> is a logical expression that evaluates to true
+  under any assignment for the propositional variables that appear in
+  it. Define a function called <i>isTaut</i> that takes a logical
+  expression as argument and returns <i>true</i> if the expression is
+  a tautology and <i>false</i> otherwise.<br>
+
+<p>
+  <b>Hint</b> There is an elegant solution based on a "game" in which
+  you try to falsify the logical expression and eventually give up
+  after trying everything. You would use <i>varsInExp</i> to get you a
+  list of variables over which you would have to look for
+  assignments, <i>eval</i> to check the truth value under each
+  assignment and exceptions to realize the search involved in the
+  game. 
+</p></li></ol>
+
+<p></p><hr><p>
+
+</p><h2>Problem 4 (4 + 4 + 2 points)</h2>
+  In this problem we are going to simulate the control flow constructs
+  in an imperative programming language within ML. In doing this
+  successfully, we have to deal with the notion of state that is so
+  central to imperative programming languages. Indeed, the main
+  constructs in such languages are ones for
+  using and modifying state and the result of computation is the state
+  that is eventually produced. This is, of course, an
+  abstraction. Typically we are interested only in <i>snapshots</i> of
+  states, indicated by print statements or returned as results by
+  functions/procedures. However, we can live with this abstraction for
+  the moment. Given this, we can simulate imperative programs in a
+  functional programming context as follows:
+<ol>
+<li>First, we represent states as tuples of values. For
+  example, if there are only two program variables <tt>x</tt> and
+  <tt>y</tt> whose values are <tt>1</tt> and <tt>2</tt> respectively,
+  then we could represent this state by the tuple <tt>(1,2)</tt>. 
+<p>
+</p></li><li> Next, we think of expressions as functions from tuples
+  (representing states) to values. To continue with the above
+  example, suppose that the (imperative) program we are trying to
+  encode uses only the variables <tt>x</tt> and <tt>y</tt> and that we
+  encode states involving these as described. Then the expression
+  <tt>x + y</tt> may be encoded as the function 
+<blockquote>
+<pre>       (fn (x,y) =&gt; x + y)
+</pre>
+</blockquote>
+<p>
+</p></li><li> Since we view states as tuples of values, statements become
+<i>tuple transformers</i> for us, i.e. they are functions that take
+tuples as input and return tuples as results. Continuing with the
+earlier example, assignment to the variable 
+<tt>x</tt> can be simulated by the function 
+<blockquote>
+<pre>   fun assignx exp state = let val (x,y) = state
+                           in ((exp state),y)
+                           end
+</pre>
+</blockquote>
+and a statement of the form <tt>x := E</tt> translates to the expression
+<tt>(assignx E')</tt>, where <tt>E'</tt> represents the translation of
+<tt>E</tt>. To be even more concrete, <tt>x := x + y</tt> becomes the
+expression <tt>(assignx (fn (x,y) =&gt; x + y))</tt>.
+<p>
+</p></li><li>Finally, we need to simulate the control flow constructs. These
+  take statements and possibly expressions and produce new statements. Thus, we
+  can realize these through higher order functions. For example,
+  sequencing can be defined, exactly as you would imagine, as the
+  <i>composition</i> of two statements 
+<blockquote>
+<pre>   fun seq stmt1 stmt2 = (fn x =&gt; (stmt2 (stmt1 x)))
+</pre>
+</blockquote>
+and the <i>if-then-else</i> statement can be realized via the function
+<tt>ifstat</tt> defined as follows:
+<blockquote>
+<pre>   fun ifstat test stmt1 stmt2 = 
+            (fn x =&gt; if (test x) then (stmt1 x) else (stmt2 x))
+</pre>
+</blockquote>
+</li></ol>
+
+<p>
+Your task in this problem is threefold
+</p><ul>
+<li>First, write definitions of the functions <tt>whilestat</tt>
+  and <tt>repeatstat</tt> that simulate the <i>while-do</i> and
+  the <i>repeat-until</i> statements from our language for structured
+  programming. 
+<p>
+</p></li><li>Next, write out in pseudo code form two simple
+  but <b>meaningful</b> imperative programs using only the collection
+  of constructs described and then show them as expressions in SML
+  based on the encoding for statement forms described in this
+  problem. Some programs you may consider in this part  are the
+  following: gcd, integer square root, exponentiation, factorial and
+  fibonacci. 
+<p>
+</p></li><li>Finally, run your encodings of imperative programs and show the
+  results they generate. 
+</li></ul>
+<p>
+Note: A natural tendency is to look for imperative constructs in ML
+matching the <i>while-do</i> and the <i>repeat-until</i> in imperative
+programming languages. Similarly, you may think that you have to use
+references and referential updates to simulate assignment. <b>This is
+    the wrong thing to do for this problem and your work will get no
+ credit if you go this route</b>. We are trying here to
+simulate imperative programming in a functional programming setting
+and not to mimic imperative behaviour. This is what the problem
+writeup tries to explain and if it is not clear then you should ask
+questions and not try to solve the problem some other way.
+
+</p><p></p><hr><p>
+
+</p><h2>Problem 5 (4 points)</h2>
+
+Consider the function <tt>fact</tt> that is defined as follows in ML:
+<blockquote>
+<pre>fun fact 0 = 1
+  | fact n = n * (fact (n - 1))
+</pre>
+</blockquote>
+This function is recursive in a way that requires control to be
+returned to within the function from a recursive call. This has at
+least two problems. First, if we think of implementing function calls
+using activation records, we would have to maintain in the stack a
+number of activation records proportional to the argument passed
+to <tt>fact</tt>. Second, one needs a more complicated treatment of
+control since we have to remember a different point to return to after
+we are finished with each call. 
+<p>
+The first of these problems can be solved by rewriting the definition
+of factorial in the following way:
+</p><blockquote>
+<pre>fun facttr 0 acc = acc
+  | facttr n acc = facttr (n-1) (n * acc)
+</pre>
+</blockquote>
+This kind of definition of a function that has the characteristic that
+any recursive calls within it are the last expressions to be evaluated
+is known as a <i>tail recursive</i> one. Notice that if a function is
+tail recursive, the activation record for it can be given up just
+before the recursive call is executed, provided that we are also
+careful to pass along to the recursive call the point to which control
+should be returned. Thus, such functions can be executed with constant
+stack space. 
+<p>
+The transformation of <tt>fact</tt> was carried out manually and it is
+not clear how to do it systematically and, hence, automatically. Also,
+the second problem remains: we still have to have some auxiliary
+mechanism for managing the transfer of control. This becomes apparent
+if we think of the fact that <tt>facttr</tt> may have been called from
+some other function.
+</p><p>
+Both problems can be dealt with quite elegantly in a framework that
+supports higher-order functions by using the following idea: instead
+of returning control from <tt>fact</tt>, we can pass into it the
+computation that needs to be carried out after it has calculated its
+value. This kind of function is called a <i>continuation</i> and when
+we write functions in this way we are said to be using
+the <i>continuation-passing style</i> of programming. Concretely, this
+means that we add a second argument to the factorial function that is
+going to be the continuation and we change the definition to the
+following: 
+</p><blockquote>
+<pre>fun factcc 0 c = (c 1)
+  | factcc n c = factcc (n-1) (fn x =&gt; c (n * x))
+</pre>
+</blockquote>
+Now, when we want to calculate factorial of some number, we call the
+function <tt>factcc</tt> with the number and the identity
+continuation. For example
+<blockquote>
+<pre>- factcc 5 (fn x =&gt; x);
+val it = 120 : int
+-
+</pre>
+</blockquote>
+Your task in this problem is to assimilate the content of the
+continuation-passing style transformation and to apply it to a
+slightly more complicated case: that of the Fibonacci
+function. Specifically, transform the definition 
+<blockquote>
+<pre>fun fib 0 = 0
+  | fib 1 = 1
+  | fib n = (fib (n-1)) + (fib (n-2))
+</pre>
+</blockquote>
+into one for a function called <tt>fibcc</tt> that takes an additional
+continuation argument and uses this to realize a tail recursive
+computation. Once you have defined it, test it relative to the
+definition of <tt>fib</tt> above. For example, you should get things
+like the following:
+<blockquote>
+<pre>- fib 11;
+val it = 89 : int
+- fibcc 11 (fn x =&gt; x);
+val it = 89 : int
+- 
+</pre>
+</blockquote>
+After you have got the gist of this transformation, you may wonder if
+(a) it is actually used anywhere and (b) if it is not too cumbersome
+to use in any case. The answers to the two questions are related. The 
+transformation is used quite regularly in implementing functional
+programming languages---it was invented by Guy Steele when he was
+implementing Scheme as part of his Master's thesis and has been used
+extensively in the SML of New Jersey compiler---and is also one that
+is used internally in the compiler, i.e., programmers still use
+general recursion. 
+
+<p></p><hr><p>
+
+</p><h2>Problem 6 (4 + 2 + 4 + 2 + 2 points)</h2>
+
+In the first two problems, we have seen polymorphism in the core
+language that allows us to define a binary (search) tree datatype whose
+elements can be of any type. To do 
+this correctly, we also noted that functions such as <i>insert</i> had
+to be parameterized by the "less than" and "equal to" functions. In
+this problem, we will see another way of realizing such
+polymorphism---through functors.
+<p>
+
+But first a note since some people tend to get confused about
+  this. The binary trees of interest in this problem are meant to be 
+  binary <b>search</b> trees, i.e. trees in which the items in the left
+  subtree are all less than what is at the root and the ones in the
+  right subtree are all greater than what is at the root; the notion
+  of less than or greater than is determined by the ordering relation
+  relevant to the items of interest in any particular instance of
+  use. I refer to the datatype as <i>binary tree</i> datatype because
+  the ordering property of elements cannot be enforced via the type
+  system itself. However, it is an invariant of the datatype that I
+  expect you to use as well as maintain through your operations on
+  objects of the type. 
+</p><p>
+Here is what you need to do in this problem; carry out each step and
+show your answers for each of them separately.
+</p><ul>
+<li>Define a signature called <i>BTREE</i> that matches with binary tree
+structures that provide a representation for binary trees together
+with the operations <i>initTree</i> that creates a tree with nothing
+in it, <i>insert</i> that inserts a data item in an existing tree,
+<i>member</i> that determines if a data item appears in the tree and
+<i>print</i> that prints out the contents of the tree in sorted
+order. The tree representation should be abstract in that <i>BTREE</i> 
+signature should not expose its internal form. Moreover, your
+declarations should be such that <i>BTREE</i> can type binary tree
+structures for any kind of data item. 
+<p>
+</p></li><li>Define a signature called <i>ITEM</i> that encapsulates whatever
+is needed to be known about any particular data kind to create a
+structure satisfying the <i>BTREE</i> signature. Notice again
+  that <i>ITEM</i> should be able to fit any kind of data item
+  structure that can be used legitimately with a binary tree
+  structure. 
+<p>
+</p></li><li>Define a functor <i>BTree</i> that takes a structure satisfying
+the <i>ITEM</i> signature and produces a structure satisfying the
+<i>BTREE</i> signature.
+<p>
+</p></li><li>Define <i>ITEM</i> structures for integers and strings and use
+with the <i>BTree</i> functor to create structures for integer and
+string binary trees.
+<p>
+</p></li><li>Create specific integer and string binary trees using the
+structures and functors defined in the previous steps, check if
+particular items are in these trees and print them out using the print
+function you have defined with the <i>BTree</i> functor.
+Remember to pick your tests carefully and explain them!
+</li></ul>
+
+<p></p><hr><p>
+
+</p><h2>Problem 7 (Optional)</h2> 
+
+<i>Note:</i> This is a problem that you should do for personal
+gratification and brownie points only. There may also be another
+reward: to do it, you will have to read the handout and this will
+prepare you better for questions on lazy evaluation in the upcoming
+exam. 
+</a><p><a name="p3">
+This question relates to dealing with infinite
+objects and requires you to have read </a><a href="http://www-users.cselabs.umn.edu/classes/Fall-2017/csci5106/resources/notes/lazy.pdf">the
+  handout on lazy and eager evaluation</a> first. Once you have done this, explain how the ML code for
+finding primes that appears at the end of the handout works. In
+particular, you should explain the underlying algorithm that is used
+as well as the manner in which finite encodings of infinite objects
+are realized and used in defining <i>prime</i> that actually
+represents the infinite sequence of primes. 
+
+</p><p></p><hr><p>
+
+</p><address>
+Last updated on Nov 14, 2017 by gopalan atsign cs dot umn dot edu.
+<p></p><hr><p>
+</p><div id="disclaimer" style="font-weight: normal; clear: both; margin-top: 5px; font-size: small; font-style: italic;">The views and opinions expressed in this page are strictly those of the page author(s). The contents of this page have not been reviewed or approved by the University of Minnesota.<p></p></div>
+</address>
+</body></html>
